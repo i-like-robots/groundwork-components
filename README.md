@@ -4,7 +4,7 @@ Dependency-free JavaScript modules compatible with but not limited to usage with
 
 ## Dependencies
 
-An AMD compatible script loader such as [RequireJS][2] or [curl.js][3].
+None, but it's preferable to use an AMD compatible script loader such as [RequireJS][2] or [curl.js][3] and manage component instances with [Groundwork.JS][1].
 
 ## Issues
 
