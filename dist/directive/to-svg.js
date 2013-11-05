@@ -1,0 +1,1 @@
+!function(a,b,c){"function"==typeof define&&define.amd?define(c):"undefined"!=typeof module&&module.exports?module.exports=c():b[a]=c()}("ToSVG",this,function(){return function(a){window.SVGElement&&(a.src=a.src.replace(/\.(png|gif)/,".svg"))}});

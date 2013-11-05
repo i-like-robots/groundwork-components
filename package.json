@@ -1,0 +1,21 @@
+{
+  "name": "Groundwork-Components",
+  "description": "Dependency-free JavaScript modules compatible with but not limited to usage with Groundwork.JS.",
+  "author": {
+    "name": "Matt Hinchliffe",
+    "url": "http://maketea.co.uk"
+  },
+  "version": "0.1.0",
+  "homepage": "https://github.com/i-like-robots/groundwork-components",
+  "bugs": "https://github.com/i-like-robots/groundwork-components/issues",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:i-like-robots/groundwork-components.git"
+  },
+  "license": "MIT",
+  "devDependencies": {
+    "grunt": "0.4.x",
+    "grunt-contrib-jshint": "0.1.x",
+    "grunt-contrib-uglify": "0.2.x"
+  }
+}
