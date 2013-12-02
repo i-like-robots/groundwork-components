@@ -42,10 +42,15 @@
             this.content.style.display = 'none';
         }
 
+        var id = this.content.id || this.target.id + '-content';
+
         this.button.style.cursor = 'pointer';
         this.button.setAttribute('tabindex', 0);
         this.button.setAttribute('role', 'button');
+        this.button.setAttribute('aria-controls', id);
         this.button.setAttribute('aria-expanded', this.open);
+
+        this.content.setAttribute('id', id);
 
         this.listener = function(e) {
              if ( ! e.keyCode || e.keyCode === 13) {
@@ -88,6 +93,12 @@
         var i, len;
 
         this.target.className = this.target.className.replace('is-open', '').replace('is-closed', '');
+
+        this.button.style.cursor = '';
+        this.button.removeAttribute('role');
+        this.button.removeAttribute('tabindex');
+        this.button.removeAttribute('aria-controls');
+        this.button.removeAttribute('aria-expanded');
 
         var events = ['click', 'keyup'];
 
