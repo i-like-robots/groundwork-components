@@ -10,8 +10,8 @@ define(['groundwork/core'], function(core) {
 
         var timeout;
         var loaded = false;
-        var mqQueryInit = element.getAttribute('data-mq-init');
-        var mqTeardown = element.getAttribute('data-mq-teardown');
+        var mediaQueryInit = element.getAttribute('data-mq-init');
+        var mediaQueryTeardown = element.getAttribute('data-mq-teardown');
         var component = element.getAttribute('data-breakpoint-component');
 
         // Strict support
@@ -33,11 +33,11 @@ define(['groundwork/core'], function(core) {
 
         var respond = function() {
 
-            if (matchMedia(mqInit).matches && ! loaded) {
+            if (matchMedia(mediaQueryInit).matches && ! loaded) {
                 return init();
             }
 
-            if (matchMedia(mqTeardown).matches && loaded) {
+            if (matchMedia(mediaQueryTeardown).matches && loaded) {
                 return teardown();
             }
         };
