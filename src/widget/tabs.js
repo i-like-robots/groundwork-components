@@ -84,6 +84,7 @@
             tab.setAttribute('aria-controls', this.tabs[i].hash.replace('#', ''));
 
             panel.setAttribute('role', 'tabpanel');
+            panel.setAttribute('aria-hidden', ! selected);
 
             if (selected) {
 
@@ -125,11 +126,13 @@
         this.active.tab.setAttribute('aria-selected', false);
 
         this.active.panel.style.display = 'none';
+        this.active.panel.setAttribute('aria-hidden', true);
 
         tab.className+= ' is-selected ';
         tab.setAttribute('aria-selected', true);
 
         panel.style.display = '';
+        panel.setAttribute('aria-hidden', false);
 
         // Find tab index
         for (var i = 0, len = this.tabs.length; i < len; i++) {
