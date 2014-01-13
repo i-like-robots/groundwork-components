@@ -7,15 +7,15 @@ module.exports = function(grunt) {
         files: [
           {
             expand: true,
-            cwd: 'src',
+            cwd: 'src/js',
             src: ['**/*.js'],
-            dest: 'dist'
+            dest: 'dist/js'
           }
         ]
       }
     },
     jshint: {
-      all: ['src/**/*.js'],
+      all: ['src/js/**/*.js'],
       options: {
         maxdepth: 4,
         curly: true,
