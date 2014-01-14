@@ -8,7 +8,7 @@
     else {
         context[name] = definition();
     }
-})('CSSFeatureDetection', this, function() {
+})('CSSFeature', this, function() {
 
     /**
      * CSS Feature Detection

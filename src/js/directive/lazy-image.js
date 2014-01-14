@@ -8,7 +8,7 @@
     else {
         context[name] = definition();
     }
-})('DeferImage', this, function() {
+})('LazyImage', this, function() {
 
     /**
      * Defer Image
@@ -21,7 +21,7 @@
         var img = new Image();
         var placehold = element.children[0];
 
-        element.className+= ' is-loading';
+        element.className+= ' is-loading ';
 
         img.onload = function() {
             element.className = element.className.replace('is-loading', 'is-loaded');

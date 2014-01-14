@@ -8,7 +8,7 @@
     else {
         context[name] = definition();
     }
-})('Placeholder', this, function() {
+})('Labelholder', this, function() {
 
     /**
      * On

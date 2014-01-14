@@ -8,15 +8,15 @@
     else {
         context[name] = definition();
     }
-})('Details', this, function() {
+})('Expandable', this, function() {
 
     /**
-     * Details
+     * Expandable
      * @description Expanding content panels. Keyboard accessible with ARIA hints.
      * @constructor
      * @param element
      */
-    var Details = function(element) {
+    var Expandable = function(element) {
         this.target = element;
         this.button = element.querySelector('[data-behaviour=button]');
         this.content = element.querySelector('[data-behaviour=content]');
@@ -31,7 +31,7 @@
      * @private
      * @param {Boolean} open
      */
-    Details.prototype._init = function(open) {
+    Expandable.prototype._init = function(open) {
         var i, len;
         var self = this;
 
@@ -74,7 +74,7 @@
     /**
      * Toggle
      */
-    Details.prototype.toggle = function() {
+    Expandable.prototype.toggle = function() {
         var targetClass = this.open ? 'is-closed' : 'is-open';
         var replaceClass = this.open ? 'is-open' : 'is-closed';
 
@@ -89,7 +89,7 @@
     /**
      * Teardown
      */
-    Details.prototype.teardown = function() {
+    Expandable.prototype.teardown = function() {
         var i, len;
 
         this.target.className = this.target.className.replace('is-open', '').replace('is-closed', '');
@@ -117,6 +117,6 @@
         delete this.open;
     };
 
-    return Details;
+    return Expandable;
 
 });
