@@ -27,12 +27,20 @@ module.exports = function(grunt) {
                     exports: true
                 }
             }
+        },
+        cssmin: {
+            dist: {
+                files: {
+                    'dist/css/components.css': ['src/css/**/*.css']
+                }
+            }
         }
     });
 
     grunt.loadNpmTasks('grunt-contrib-jshint');
     grunt.loadNpmTasks('grunt-contrib-uglify');
+    grunt.loadNpmTasks('grunt-contrib-cssmin');
 
-    grunt.registerTask('default', ['jshint', 'uglify']);
+    grunt.registerTask('default', ['jshint', 'uglify', 'cssmin']);
 
 };
