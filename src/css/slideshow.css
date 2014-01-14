@@ -1,0 +1,66 @@
+.slideshow {
+	position: relative;
+}
+
+.slideshow > ul {
+	margin: 0;
+	padding: 0;
+}
+
+.slideshow > ul > li {
+
+	/* Absolute positioning means we have to force layout */
+	width: 100%;
+
+	/* Only WebKit requires a prefix */
+	-webkit-transition: all 1s ease;
+	transition: all 1s ease;
+
+	/* Not in use */
+	display: none;
+}
+
+.slideshow > ul > li.is-before,
+.slideshow > ul > li.is-after {
+	position: absolute;
+	top: 0;
+	left: 0;
+	z-index: 1;
+	display: block;
+	opacity: 0;
+}
+
+.slideshow > ul > li.is-current {
+	position: relative;
+	z-index: 2;
+	display: block;
+	opacity: 1;
+}
+
+.slideshow > ul > li > img {
+	display: block;
+	min-width: 100%;
+	height: auto;
+}
+
+.slideshow .next,
+.slideshow .prev {
+	position: absolute;
+	top: 50%;
+	z-index: 3;
+	margin-top: -1em;
+	padding: .5em;
+	line-height: 1;
+	text-decoration: none;
+	color: white;
+	background: rgba(0, 0, 0, .25);
+	cursor: pointer;
+}
+
+.slideshow .next {
+	right: 0;
+}
+
+.slideshow .prev {
+	left: 0;
+}

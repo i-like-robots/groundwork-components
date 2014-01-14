@@ -1,0 +1,33 @@
+.dropdown {
+	width: 10em;
+	border: 1px solid #CCC;
+}
+
+.dropdown a,
+.dropdown > span {
+	display: block;
+	padding: .25em .5em;
+	text-decoration: none;
+	color: #000;
+	background-color: #FFF;
+}
+
+.dropdown.is-closed > span:after {
+	content: ' \21D2';
+}
+
+.dropdown.is-open > span:after {
+	content: ' \21D3';
+}
+
+.dropdown a:hover,
+.dropdown a:focus {
+	color: #07B4BA;
+	background-color: #EEE;
+}
+
+.dropdown ul {
+	margin: 0;
+	padding: 0;
+	list-style-type: 0;
+}
