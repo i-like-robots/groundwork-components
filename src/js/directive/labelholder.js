@@ -217,13 +217,13 @@
         this.input.removeAttribute('title');
 
         if (this.type === 'select') {
-           if (this.option) {
-               this.input.removeChild(this.option);
-               delete this.option;
-           }
-           else {
-               this.input.options[0].text = '';
-           }
+            if (this.option) {
+                this.input.removeChild(this.option);
+                delete this.option;
+            }
+            else {
+                this.input.options[0].text = '';
+            }
         }
         else {
             if (this.supported) {

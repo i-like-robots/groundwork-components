@@ -22,7 +22,9 @@
         this.content = element.querySelector('[data-behaviour=content]');
 
         if (this.open === undefined) {
-            this._init( element.className.match(/\bis-open\b/) || (element.id && window.location.hash.replace('#', '') === element.id) );
+            this._init(
+                element.className.match(/\bis-open\b/) || window.location.hash.replace('#', '') === this.content.id
+            );
         }
     };
 
@@ -53,7 +55,7 @@
         this.content.setAttribute('id', id);
 
         this.listener = function(e) {
-             if ( ! e.keyCode || e.keyCode === 13) {
+            if ( ! e.keyCode || e.keyCode === 13) {
                 self.toggle();
             }
         };
