@@ -30,6 +30,8 @@
      * @private
      */
     Modal.prototype._init = function() {
+        var self = this;
+
         this.overlay = document.createElement('div');
         this.overlay.className = 'overlay';
         this.overlay.setAttribute('tabindex', -1);
@@ -51,21 +53,27 @@
         this.closeButton.setAttribute('type', 'button');
 
         this.closeButton.onclick = function() {
-            this.close();
-        }.bind(this);
+            self.close();
+        };
 
         this.escapeHandler = function(e) {
             if (e.keyCode === 27) {
-                this.close();
+                self.close();
             }
-        }.bind(this);
+        };
 
         this.focusHandler = function(e) {
-            if (!this.modalWrapper.contains(e.target)) {
-                e.stopPropagation();
-                this.modalContent.focus();
+            if (!self.modalWrapper.contains(e.target)) {
+                if (e.stopPropagation) {
+                    e.stopPropagation();
+                }
+                else {
+                    e.cancelBubble = true;
+                }
+
+                self.modalContent.focus();
             }
-        }.bind(this);
+        };
 
         this.modalWindow.appendChild(this.modalWrapper);
         this.modalWrapper.appendChild(this.modalContent);
@@ -96,8 +104,14 @@
         this.target.appendChild(this.overlay);
         this.target.appendChild(this.modalWindow);
 
-        window.addEventListener('focus', this.focusHandler, false);
-        window.addEventListener('keyup', this.escapeHandler, false);
+        if (window.addEventListener) {
+            window.addEventListener('focus', this.focusHandler, false);
+            window.addEventListener('keyup', this.escapeHandler, false);
+        }
+        else {
+            window.attachEvent('onfocus', this.focusHandler);
+            window.attachEvent('onkeyup', this.escapeHandler);
+        }
 
         this.trigger = document.activeElement;
         this.modalWindow.focus();
@@ -121,8 +135,14 @@
      * Close
      */
     Modal.prototype.close = function(callback) {
-        window.removeEventListener('focus', this.focusHandler, false);
-        window.removeEventListener('keyup', this.escapeHandler, false);
+        if (window.removeEventListener) {
+            window.removeEventListener('focus', this.focusHandler, false);
+            window.removeEventListener('keyup', this.escapeHandler, false);
+        }
+        else {
+            window.detachEvent('onfocus', this.focusHandler);
+            window.detachEvent('onkeyup', this.escapeHandler);
+        }
 
         this.target.removeChild(this.modalWindow);
         this.target.removeChild(this.overlay);

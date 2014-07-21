@@ -58,7 +58,7 @@
             self.toggle();
         };
 
-        if (window.addEventListener) {
+        if (this.button.addEventListener) {
             this.button.addEventListener('click', this.clickHandler, false);
         }
         else {
@@ -96,7 +96,7 @@
         this.button.removeAttribute('aria-owns');
         this.button.removeAttribute('aria-controls');
 
-        if (window.addEventListener) {
+        if (this.button.removeEventListener) {
             this.button.removeEventListener('click', this.clickHandler, false);
         }
         else {
