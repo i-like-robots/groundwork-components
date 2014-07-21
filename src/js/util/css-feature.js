@@ -10,26 +10,30 @@
     }
 })('CSSFeature', this, function() {
 
+    'use strict';
+
     /**
      * CSS Feature Detection
      * @param {String} property
      * @returns {String}
      */
     return function(property) {
-        var i, len, prop;
+        var i, len, prefixedProp;
         var support = '';
-        var prefixes = ['o', 'ms', 'moz', 'webkit'];
+        var prefixes = ['ms', 'Moz', 'webkit'];
         var temp = document.createElement('div');
 
-        prop = property.toLowerCase();
-        if (prop in temp.style) {
-            support = prop;
+        if (property in temp.style) {
+            support = property;
         }
         else {
+            property = property.charAt(0).toUpperCase() + property.slice(1);
+
             for (i = 0, len = prefixes.length; i < len; i++) {
-                prop = prefixes[i] + property;
-                if (prop in temp.style) {
-                    support = prop;
+                prefixedProp = prefixes[i] + property;
+
+                if (prefixedProp in temp.style) {
+                    support = prefixedProp;
                     break;
                 }
             }
