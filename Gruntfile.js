@@ -15,17 +15,7 @@ module.exports = function(grunt) {
         jshint: {
             all: ['src/js/**/*.js'],
             options: {
-                maxdepth: 4,
-                curly: true,
-                newcap: true,
-                eqeqeq: true,
-                browser: true,
-                trailing: true,
-                globals: {
-                    jquery: true,
-                    define: false,
-                    exports: true
-                }
+                jshintrc: true
             }
         },
         cssmin: {
