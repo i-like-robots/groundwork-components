@@ -10,27 +10,26 @@
     }
 })('Modal', this, function() {
 
+    'use strict';
+
     /**
      * Modal
-     * @description A simple modal window
      * @constructor
-     * @param element
+     * @param {HTMLElement} element
      */
-    var Modal = function(element) {
+    function Modal(element) {
         this.target = element;
 
         if (!this.isOpen) {
             this._init();
         }
-    };
+    }
 
     /**
      * Init
      * @private
      */
     Modal.prototype._init = function() {
-        var self = this;
-
         this.overlay = document.createElement('div');
         this.overlay.className = 'overlay';
         this.overlay.setAttribute('tabindex', -1);
@@ -52,19 +51,33 @@
         this.closeButton.setAttribute('type', 'button');
 
         this.closeButton.onclick = function() {
-            self.close();
-        };
+            this.close();
+        }.bind(this);
+
+        this.escapeHandler = function(e) {
+            if (e.keyCode === 27) {
+                this.close();
+            }
+        }.bind(this);
+
+        this.focusHandler = function(e) {
+            if (!this.modalWrapper.contains(e.target)) {
+                e.stopPropagation();
+                this.modalContent.focus();
+            }
+        }.bind(this);
 
         this.modalWindow.appendChild(this.modalWrapper);
         this.modalWrapper.appendChild(this.modalContent);
         this.modalWindow.appendChild(this.closeButton);
 
+        this.trigger = null;
         this.isOpen = false;
     };
 
     /**
      * Open
-     * @param  {string} content
+     * @param {String} content
      */
     Modal.prototype.open = function(content, callback) {
         if (this.isOpen) {
@@ -75,8 +88,18 @@
             this.update(content);
         }
 
+        // Hide all background content from focus
+        for (var i = 0, len = this.target.children.length; i < len; i++) {
+            this.target.children[i].setAttribute('aria-hidden', true);
+        }
+
         this.target.appendChild(this.overlay);
         this.target.appendChild(this.modalWindow);
+
+        window.addEventListener('focus', this.focusHandler, false);
+        window.addEventListener('keyup', this.escapeHandler, false);
+
+        this.trigger = document.activeElement;
         this.modalWindow.focus();
 
         this.isOpen = true;
@@ -88,7 +111,7 @@
 
     /**
      * Update
-     * @param  {string} content
+     * @param {String} content
      */
     Modal.prototype.update = function(content) {
         this.modalContent.innerHTML = content;
@@ -98,8 +121,21 @@
      * Close
      */
     Modal.prototype.close = function(callback) {
+        window.removeEventListener('focus', this.focusHandler, false);
+        window.removeEventListener('keyup', this.escapeHandler, false);
+
         this.target.removeChild(this.modalWindow);
         this.target.removeChild(this.overlay);
+
+        for (var i = 0, len = this.target.children.length; i < len; i++) {
+            this.target.children[i].removeAttribute('aria-hidden');
+        }
+
+        if (this.trigger) {
+            this.trigger.focus();
+            this.trigger = null;
+        }
+
         this.isOpen = false;
 
         if (callback) {
@@ -115,11 +151,16 @@
             this.close();
         }
 
+        delete this.escapeHandler;
+        delete this.focusHandler;
+
         delete this.closeButton;
         delete this.modalContent;
         delete this.modalWrapper;
         delete this.modalWindow;
         delete this.overlay;
+
+        delete this.trigger;
         delete this.isOpen;
     };
 
