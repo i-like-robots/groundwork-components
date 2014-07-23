@@ -50,6 +50,8 @@
 	z-index: 3;
 	margin-top: -1em;
 	padding: .5em;
+	border: 0;
+	font-size: 100%;
 	line-height: 1;
 	text-decoration: none;
 	color: white;
