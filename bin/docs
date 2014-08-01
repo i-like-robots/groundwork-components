@@ -1,0 +1,13 @@
+#!/bin/bash
+
+echo "Generating documentation..."
+
+for path in $(find src/js -iname '*.js'); do
+  if [ ${#path} -gt 0 ]; then
+    echo "$path"
+    bn=$(basename "$path" .js)
+    dox < "$path" > "docs/$bn.json"
+    jade -O "docs/$bn.json" < "docs/template.jade" > "docs/$bn.html"
+    rm "docs/$bn.json"
+  fi
+done
