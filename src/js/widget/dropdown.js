@@ -10,22 +10,23 @@
     }
 })('Dropdown', this, function() {
 
+    'use strict';
+
     /**
      * Dropdown
-     * @description Dropdown menus. Keyboard accessible with ARIA hints.
      * @constructor
-     * @param element
+     * @param {HTMLElement} element
      */
-    var Dropdown = function(element) {
+    function Dropdown(element) {
         this.target = element;
-        this.label = element.querySelector('[data-behaviour=label]');
         this.menu = element.querySelector('[data-behaviour=menu]');
-        this.options = element.querySelectorAll('[data-behaviour=option]');
+        this.button = element.querySelector('[data-behaviour=button]');
+        this.options = this.menu.querySelectorAll('[data-behaviour=option]');
 
         if (this.open === undefined) {
             this._init();
         }
-    };
+    }
 
     /**
      * Init
@@ -35,49 +36,29 @@
         var i, len;
         var self = this;
 
+        this.open = false;
+
         this.target.className+= ' is-closed';
 
-        this.label.style.cursor = 'pointer';
-        this.label.setAttribute('tabindex', 0);
-        this.label.setAttribute('role', 'button');
-        this.label.setAttribute('aria-expanded', false);
-
-        this.listener = function(e) {
-            var isMouse = e.type === 'click';
-            var isTouch = e.type === 'touchend' && e.changedTouches.length === 1;
-            var isKeyboard = e.type === 'keyup' && e.keyCode === 13;
-
-            if (isMouse || isTouch || isKeyboard) {
-
-                if (e.preventDefault) {
-                    e.preventDefault();
-                }
-                else {
-                    e.returnValue = false;
-                }
-
-                self.toggle();
-            }
-        };
-
-        var events = ['click', 'touchend'];
-
-        // If the label is 'clickable' then keyboard support should be implied
-        // <http://bit.ly/Zgip9P>
-        var nodeType = this.label.tagName.toLowerCase();
-
-        if (nodeType !== 'a' && nodeType !== 'button') {
-            events.push('keyup');
+        // Please use a button element
+        if (this.button.tagName !== 'BUTTON') {
+            this.button.style.cursor = 'pointer';
+            this.button.setAttribute('tabindex', 0);
+            this.button.setAttribute('role', 'button');
         }
 
-        for (i = 0, len = events.length; i < len; i++) {
-            if (window.addEventListener) {
-                this.label.addEventListener(events[i], this.listener, false);
-            }
-            else {
-                // Presume legacy IE
-                this.label.attachEvent('on' + events[i], this.listener);
-            }
+        this.button.setAttribute('aria-expanded', this.open);
+        this.button.setAttribute('aria-owns', this.menu.id);
+
+        this.clickHandler = function(e) {
+            self.toggle();
+        };
+
+        if (this.button.addEventListener) {
+            this.button.addEventListener('click', this.clickHandler, false);
+        }
+        else {
+            this.button.attachEvent('onclick', this.clickHandler);
         }
 
         this.menu.style.display = 'none';
@@ -85,11 +66,8 @@
         this.menu.setAttribute('aria-hidden', true);
 
         for (i = 0, len = this.options.length; i < len; i++) {
-            this.options[i].setAttribute('tabindex', 0);
             this.options[i].setAttribute('role', 'menuitem');
         }
-
-        this.open = false;
     };
 
     /**
@@ -103,7 +81,7 @@
 
         this.target.className = this.target.className.replace(replaceClass, targetClass);
 
-        this.label.setAttribute('aria-expanded', this.open);
+        this.button.setAttribute('aria-expanded', this.open);
 
         this.menu.style.display = this.open ? '' : 'none';
         this.menu.setAttribute('aria-hidden', ! this.open);
@@ -121,21 +99,20 @@
 
         this.target.className = this.target.className.replace('is-open', '').replace('is-closed', '');
 
-        this.label.style.cursor = '';
-        this.label.removeAttribute('role');
-        this.label.removeAttribute('tabindex');
-        this.label.removeAttribute('aria-expanded');
+        if (this.button.tagName !== 'BUTTON') {
+            this.button.style.cursor = '';
+            this.button.removeAttribute('role');
+            this.button.removeAttribute('tabindex');
+        }
 
-        var events = ['click', 'keyup', 'touchend'];
+        this.button.removeAttribute('aria-owns');
+        this.button.removeAttribute('aria-controls');
 
-        for (i = 0, len = events.length; i < len; i++) {
-            if (window.addEventListener) {
-                this.label.removeEventListener(events[i], this.listener, false);
-            }
-            else {
-                // Presume legacy IE
-                this.label.detachEvent('on' + events[i], this.listener);
-            }
+        if (this.button.removeEventListener) {
+            this.button.removeEventListener('click', this.clickHandler, false);
+        }
+        else {
+            this.button.detachEvent('onclick', this.clickHandler);
         }
 
         this.menu.style.display = '';
@@ -143,10 +120,13 @@
         this.menu.removeAttribute('aria-hidden');
 
         for (i = 0, len = this.options.length; i < len; i++) {
-            this.options[i].removeAttribute('tabindex');
             this.options[i].removeAttribute('role');
         }
 
+        delete this.clickHandler;
+
+        delete this.button;
+        delete this.menu;
         delete this.open;
     };
 
