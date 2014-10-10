@@ -20,9 +20,12 @@ module.exports = function(grunt) {
         },
         cssmin: {
             dist: {
-                files: {
-                    'dist/css/components.css': ['src/css/**/*.css']
-                }
+                files: [{
+                    expand: true,
+                    cwd: 'src/css',
+                    src: ['**/*.css'],
+                    dest: 'dist/css'
+                }]
             }
         }
     });
