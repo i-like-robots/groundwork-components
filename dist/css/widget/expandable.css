@@ -1,0 +1,1 @@
+.expandable{border:1px solid #CCC}.expandable__summary{margin:0;padding:.25em .5em}.expandable.is-closed>.expandable__summary:after{content:' \21D2'}.expandable.is-open>.expandable__summary:after{content:' \21D3'}.expandable__content{padding:.5em}

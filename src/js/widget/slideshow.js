@@ -12,9 +12,8 @@
 
     /**
      * Slideshow
-     * @description A simple slideshow for use with CSS transitions
      * @constructor
-     * @param element
+     * @param {HTMLElement} element
      */
     var Slideshow = function(element) {
         this.target = element;
@@ -36,90 +35,45 @@
         this.current = 0;
         this.maximum = this.frames.length - 1;
 
-        // Add next and previous links
-        this.linkNext = document.createElement('a');
-        this.linkPrev = document.createElement('a');
+        // Add next and previous buttons
+        this.btnNext = document.createElement('button');
+        this.btnPrev = document.createElement('button');
+        this.btnNext.type = this.btnPrev.type = 'button';
+        this.btnNext.className = 'next';
+        this.btnPrev.className = 'prev';
+        this.btnNext.innerHTML = 'Next slide';
+        this.btnPrev.innerHTML = 'Previous slide';
 
-        this.linkNext.className = this.linkNext.innerHTML = 'next';
-        this.linkPrev.className = this.linkPrev.innerHTML = 'prev';
-
-        // Yeah go a bit old school, it's OK ;-)
-        this.linkNext.onclick = function() {
-            self.to(self.current + 1, true);
-            return false;
-        };
-        this.linkPrev.onclick = function() {
-            self.to(self.current - 1, true);
-            return false;
+        this.btnNext.onclick = function() {
+            self.to(self.current + 1);
         };
 
-        this.target.appendChild(this.linkNext);
-        this.target.appendChild(this.linkPrev);
+        this.btnPrev.onclick = function() {
+            self.to(self.current - 1);
+        };
 
-        // Presume if CSS transition property is available
-        // then transition events are also implemented
-        var prefix = (function() {
-            var i, len, prefix;
-            var test = document.body.style;
-            var prefixes = ['ms', 'moz', 'webkit'];
+        this.target.appendChild(this.btnNext);
+        this.target.appendChild(this.btnPrev);
 
-            if ('transition' in test) {
-                prefix = '';
+        this.keyupHandler = function(e) {
+            switch (e.keyCode) {
+                case 37:
+                    self.to(self.current - 1);
+                    break;
+                case 39:
+                    self.to(self.current + 1);
+                    break;
             }
-            else {
-                for (i = 0, len = prefixes.length; i < len; i++) {
-                    if (prefixes[i] + 'Transition' in test) {
-                        prefix = prefixes[i];
-                        break;
-                    }
-                }
-            }
+        };
 
-            return prefix;
-        })();
-
-        this.transitionEnd = (function() {
-            var event;
-
-            if (typeof prefix === 'string') {
-                event = prefix.length ? prefix + 'TransitionEnd' : 'transitionend';
-            }
-
-            return event;
-        })();
-
-        // Only kick off autoplay when transition has ended to
-        // prevent slides looping continuously in the background
-        if (this.transitionEnd) {
-            this.transitionEndHandler = function() {
-                if (self.timeout) {
-                    self._autoplay();
-                }
-            };
-
-            this.target.addEventListener(this.transitionEnd, this.transitionEndHandler, true);
+        if (this.target.addEventListener) {
+            this.target.addEventListener('keyup', this.keyupHandler, true);
+        }
+        else {
+            this.target.attachEvent('onkeyup', this.keyupHandler);
         }
 
-        // Kick off and start autoplay
         this.to(this.current);
-        this._autoplay();
-    };
-
-    /**
-     * Autoplay
-     * @private
-     */
-    Slideshow.prototype._autoplay = function() {
-        var self = this;
-        var target = this.current + 1;
-
-        if (this.timeout) {
-            clearTimeout(this.timeout);
-        }
-
-        this.timeout = setTimeout(function() {
-            self.to(target);
-        }, 5000);
     };
 
     /**
@@ -141,19 +95,11 @@
     /**
      * To
      * @param {Number} x
-     * @param {Boolean} user
      */
-    Slideshow.prototype.to = function(x, user) {
+    Slideshow.prototype.to = function(x) {
         x = this._loop(x);
 
         if (this.frames[x]) {
-
-            // Stop autoplay on user interaction
-            if (user && this.timeout) {
-                clearTimeout(this.timeout);
-                delete this.timeout;
-            }
-
             this.before = this._loop(x - 1);
             this.current = x;
             this.after = this._loop(x + 1);
@@ -179,37 +125,27 @@
         this.frames[this.before].className+= classBefore;
         this.frames[this.current].className+= classCurrent;
         this.frames[this.after].className+= classAfter;
-
-        // Force an autoplay 'tick' when transitions
-        // and events are not available
-        if ( ! this.transitionEnd && this.timeout) {
-            this._autoplay();
-        }
     };
 
     /**
      * Teardown
      */
     Slideshow.prototype.teardown = function() {
-        this.target.removeChild(this.linkNext);
-        this.target.removeChild(this.linkPrev);
+        this.target.removeChild(this.btnNext);
+        this.target.removeChild(this.btnPrev);
 
-        if (this.transitionEnd) {
-            this.target.removeEventListener(this.transitionEnd, this.transitionEndHandler);
+        if (this.target.removeEventListener) {
+            this.target.removeEventListener('keyup', this.keyupHandler, true);
         }
-
-        if (this.timeout) {
-            clearTimeout(this.timeout);
-            delete this.timeout;
+        else {
+            this.target.detachEvent('onkeyup', this.keyupHandler);
         }
 
         delete this.after;
         delete this.before;
         delete this.current;
-        delete this.linkNext;
-        delete this.linkPrev;
-        delete this.transitionEnd;
-        delete this.transitionEndHandler;
+        delete this.btnNext;
+        delete this.btnPrev;
     };
 
     return Slideshow;

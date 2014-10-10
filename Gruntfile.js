@@ -15,24 +15,17 @@ module.exports = function(grunt) {
         jshint: {
             all: ['src/js/**/*.js'],
             options: {
-                maxdepth: 4,
-                curly: true,
-                newcap: true,
-                eqeqeq: true,
-                browser: true,
-                trailing: true,
-                globals: {
-                    jquery: true,
-                    define: false,
-                    exports: true
-                }
+                jshintrc: true
             }
         },
         cssmin: {
             dist: {
-                files: {
-                    'dist/css/components.css': ['src/css/**/*.css']
-                }
+                files: [{
+                    expand: true,
+                    cwd: 'src/css',
+                    src: ['**/*.css'],
+                    dest: 'dist/css'
+                }]
             }
         }
     });

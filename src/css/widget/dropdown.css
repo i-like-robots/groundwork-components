@@ -3,8 +3,14 @@
 	border: 1px solid #CCC;
 }
 
+.dropdown ul {
+	margin: 0;
+	padding: 0;
+	list-style-type: 0;
+}
+
 .dropdown a,
-.dropdown > span {
+.dropdown button {
 	display: block;
 	padding: .25em .5em;
 	text-decoration: none;
@@ -12,11 +18,16 @@
 	background-color: #FFF;
 }
 
-.dropdown.is-closed > span:after {
+.dropdown button {
+	border: 0;
+	font: inherit;
+}
+
+.dropdown.is-closed > button:after {
 	content: ' \21D2';
 }
 
-.dropdown.is-open > span:after {
+.dropdown.is-open > button:after {
 	content: ' \21D3';
 }
 
@@ -24,10 +35,4 @@
 .dropdown a:focus {
 	color: #07B4BA;
 	background-color: #EEE;
-}
-
-.dropdown ul {
-	margin: 0;
-	padding: 0;
-	list-style-type: 0;
 }

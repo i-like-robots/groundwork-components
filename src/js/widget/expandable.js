@@ -10,13 +10,14 @@
     }
 })('Expandable', this, function() {
 
+    'use strict';
+
     /**
      * Expandable
-     * @description Expanding content panels. Keyboard accessible with ARIA hints.
      * @constructor
-     * @param element
+     * @param {HTMLElement} element
      */
-    var Expandable = function(element) {
+    function Expandable(element) {
         this.target = element;
         this.button = element.querySelector('[data-behaviour=button]');
         this.content = element.querySelector('[data-behaviour=content]');
@@ -26,7 +27,7 @@
                 element.className.match(/\bis-open\b/) || window.location.hash.replace('#', '') === this.content.id
             );
         }
-    };
+    }
 
     /**
      * Init
@@ -34,7 +35,6 @@
      * @param {Boolean} open
      */
     Expandable.prototype._init = function(open) {
-        var i, len;
         var self = this;
 
         this.open = open;
@@ -44,32 +44,25 @@
             this.content.style.display = 'none';
         }
 
-        var id = this.content.id || this.target.id + '-content';
+        // Please use a button element
+        if (this.button.tagName !== 'BUTTON') {
+            this.button.style.cursor = 'pointer';
+            this.button.setAttribute('tabindex', 0);
+            this.button.setAttribute('role', 'button');
+        }
 
-        this.button.style.cursor = 'pointer';
-        this.button.setAttribute('tabindex', 0);
-        this.button.setAttribute('role', 'button');
-        this.button.setAttribute('aria-controls', id);
         this.button.setAttribute('aria-expanded', this.open);
+        this.button.setAttribute('aria-owns', this.content.id);
 
-        this.content.setAttribute('id', id);
-
-        this.listener = function(e) {
-            if ( ! e.keyCode || e.keyCode === 13) {
-                self.toggle();
-            }
+        this.clickHandler = function(e) {
+            self.toggle();
         };
 
-        var events = ['click', 'keyup'];
-
-        for (i = 0, len = events.length; i < len; i++) {
-            if (window.addEventListener) {
-                self.button.addEventListener(events[i], this.listener, false);
-            }
-            else {
-                // Presume legacy IE
-                self.button.attachEvent('on' + events[i], this.listener);
-            }
+        if (this.button.addEventListener) {
+            this.button.addEventListener('click', this.clickHandler, false);
+        }
+        else {
+            this.button.attachEvent('onclick', this.clickHandler);
         }
     };
 
@@ -92,30 +85,30 @@
      * Teardown
      */
     Expandable.prototype.teardown = function() {
-        var i, len;
-
         this.target.className = this.target.className.replace('is-open', '').replace('is-closed', '');
 
-        this.button.style.cursor = '';
-        this.button.removeAttribute('role');
-        this.button.removeAttribute('tabindex');
+        if (this.button.tagName !== 'BUTTON') {
+            this.button.style.cursor = '';
+            this.button.removeAttribute('role');
+            this.button.removeAttribute('tabindex');
+        }
+
+        this.button.removeAttribute('aria-owns');
         this.button.removeAttribute('aria-controls');
-        this.button.removeAttribute('aria-expanded');
 
-        var events = ['click', 'keyup'];
-
-        for (i = 0, len = events.length; i < len; i++) {
-            if (window.addEventListener) {
-                this.button.removeEventListener(events[i], this.listener, false);
-            }
-            else {
-                // Presume legacy IE
-                this.button.detachEvent('on' + events[i], this.listener);
-            }
+        if (this.button.removeEventListener) {
+            this.button.removeEventListener('click', this.clickHandler, false);
+        }
+        else {
+            this.button.detachEvent('onclick', this.clickHandler);
         }
 
         this.content.style.display = '';
 
+        delete this.clickHandler;
+
+        delete this.content;
+        delete this.button;
         delete this.open;
     };
 
